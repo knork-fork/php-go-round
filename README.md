@@ -1,6 +1,6 @@
 # php-go-round
 
-PhpGoRound
+PhpGoRound - WIP web server for PHP written in Go.
 
 Start container:
 
