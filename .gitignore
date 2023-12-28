@@ -2,3 +2,5 @@
 jmeter/output.jtl
 **/jmeter.log
 
+logs/
+
