@@ -7,8 +7,10 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
+    route := r.URL.Path
+
     // Construct the command to execute the PHP script
-    cmd := exec.Command("php", "/app/src/index.php")
+    cmd := exec.Command("php", "/app/src/index.php", route)
 
     // Execute the PHP script and capture its output.
     output, err := cmd.CombinedOutput()

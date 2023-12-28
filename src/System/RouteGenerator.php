@@ -6,9 +6,12 @@ class RouteGenerator
 {
     /**
      * @param ReflectionClass[] $controllerClasses
+     * @return Route[]
      */
-    public static function generateRoutes(array $controllerClasses): void
+    public static function generateRoutes(array $controllerClasses): array
     {
+        $routes = [];
+
         foreach ($controllerClasses as $controllerClass) {
             $methods = $controllerClass->getMethods();
             foreach ($methods as $method) {
@@ -19,14 +22,20 @@ class RouteGenerator
                 $routeAttributes = $method->getAttributes(Route::class);
                 foreach ($routeAttributes as $routeAttribute) {
                     $routeInstance = $routeAttribute->newInstance();
-                    echo sprintf(
+                    $routeInstance->class = $controllerClass;
+                    $routeInstance->method = $method;
+                    /*echo sprintf(
                         'url %s for %s::%s()',
                         $routeInstance->url,
                         $controllerClass->getName(),
                         $method->getName()
-                    );
+                    );*/
+                    $routes[] = $routeInstance;
                 }
             }
         }
+
+
+        return $routes;
     }
 }

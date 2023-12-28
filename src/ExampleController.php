@@ -8,6 +8,7 @@ class ExampleController
     public function home(): void
     {
         // render home page
+        echo 'this is home.';
     }
 
     public function noAttributes(): void
