@@ -1,0 +1,7 @@
+parameters:
+    level: 9
+    checkUninitializedProperties: true
+    checkBenevolentUnionTypes: true
+    paths:
+        - src
+    phpVersion: 80300 # PHP 8.2.9

@@ -15,11 +15,6 @@ class ExampleController
     {
         // do nothing
     }
-
-    private function home2(): void
-    {
-        // private method
-    }
 }
 
 
