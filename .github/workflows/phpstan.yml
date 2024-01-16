@@ -16,5 +16,5 @@ jobs:
         run: ls -la
 
       - name: Run PHPStan
-        run: ./docker/phpstan.sh
+        run: docker/phpstan.sh
 
