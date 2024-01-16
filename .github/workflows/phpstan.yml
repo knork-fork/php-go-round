@@ -12,9 +12,6 @@ jobs:
       steps:
       - uses: actions/checkout@v2
 
-      - name: List files
-        run: ls -la
-
       - name: Run PHPStan
-        run: docker/phpstan.sh
+        run: docker/phpstan
 
