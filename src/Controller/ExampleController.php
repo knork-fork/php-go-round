@@ -1,7 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace App\Controller;
 
+use PhpGoRound\Endpoint;
+use PhpGoRound\Route;
+
+#[Endpoint]
 class ExampleController
 {
     #[Route('/home', name: 'home')]

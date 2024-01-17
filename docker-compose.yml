@@ -7,5 +7,6 @@ services:
         - "50000:8080"
     volumes:
         - ./src:/app/src
+        - ./public:/app/public
         - ./webserver/php.ini:/usr/local/etc/php/php.ini
         - ./logs:/var/log

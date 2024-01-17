@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-declare(strict_types=1);
+namespace PhpGoRound;
+
+use Exception;
 
 class Request
 {
@@ -8,6 +10,9 @@ class Request
         public string $route
     ) {}
 
+    /**
+     * @param string[] $args 
+     */
     public static function loadRequest(array $args): Request
     {
         // to-do: there will probably be way more than 2 arguments
