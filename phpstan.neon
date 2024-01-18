@@ -4,4 +4,4 @@ parameters:
     checkBenevolentUnionTypes: true
     paths:
         - src
-    phpVersion: 80300 # PHP 8.2.9
+    phpVersion: 80300 # PHP 8.3.0
