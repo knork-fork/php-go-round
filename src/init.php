@@ -18,6 +18,7 @@ spl_autoload_register(function ($className) {
 
 $request = Request::loadRequest($argv);
 
-Router::callRouteByUrl($request->route);
+$router = new Router($request);
+$router->callRouteByUrl();
 
 die();

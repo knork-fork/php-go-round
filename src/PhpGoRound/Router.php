@@ -2,13 +2,21 @@
 
 namespace PhpGoRound;
 
+use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use Exception;
 use ReflectionClass;
+use ReflectionMethod;
+use ReflectionNamedType;
 
 class Router
 {
-    public static function callRouteByUrl(string $url): void
+    public function __construct(
+        private Request $request
+    )
+    {}
+
+    public function callRouteByUrl(): void
     {
         // Find all classes with Endpoint attribute
         $controllers = [];
@@ -35,11 +43,21 @@ class Router
                 foreach ($routeAttributes as $routeAttribute) {
                     $routeInstance = $routeAttribute->newInstance();
  
-                    if ($routeInstance->url === $url) {
-                        $method->invoke(
-                            $controller->newInstance(),
-                            null
-                        );
+                    if ($routeInstance->url === $this->request->route) {
+                        $methodParameters = $this->getMethodParameters($method);
+                        $this->checkRequestParamsMatchMethodParams($methodParameters);
+                        
+                        if ($method->getNumberOfParameters() > 0) {
+                            $method->invokeArgs(
+                                $controller->newInstance(),
+                                $this->request->params
+                            );
+                        } else {
+                            $method->invoke(
+                                $controller->newInstance(),
+                                null
+                            );
+                        }
 
                         return;
                     }
@@ -53,7 +71,7 @@ class Router
     /**
      * @return class-string[] 
      */
-    private static function getControllers(): array
+    private function getControllers(): array
     {
         // TO-DO: this only works for files in src/Controller, not subdirectories
         // TO-DO: also this should be cached
@@ -72,5 +90,60 @@ class Router
         }
 
         return $controllers;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getMethodParameters(ReflectionMethod $method): array
+    {
+        $parameters = [];
+        foreach ($method->getParameters() as $parameter) {
+            $type = $parameter->getType();
+            if ($type instanceof ReflectionNamedType) {
+                $typeName = $type->getName();
+            } else {
+                $typeName = 'mixed';
+            }
+            $parameters[$parameter->getName()] = $typeName;
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * @param array array<string, string>
+     */
+    private function checkRequestParamsMatchMethodParams(array $methodParams): void
+    {     
+        if (count($methodParams) !== count($this->request->params)) {
+            $this->throwParamsDoNotMatchException();
+        }
+
+        // gettype returns 'integer' instead of 'int', 'boolean' instead of 'bool', etc.
+        $typeMap = [
+            'boolean' => 'bool',
+            'integer' => 'int',
+        ];
+
+        foreach ($methodParams as $name => $type) {
+            if (!array_key_exists($name, $this->request->params)) {
+                $this->throwParamsDoNotMatchException();
+            }
+
+            $paramType = gettype($this->request->params[$name]);
+            $paramType = $typeMap[$paramType] ?? $paramType;
+
+            if ($paramType !== $type) {
+                var_dump($paramType);
+                var_dump($type);
+                $this->throwParamsDoNotMatchException();
+            }
+        }  
+    }
+
+    private function throwParamsDoNotMatchException(): void
+    {
+        throw new BadRequestException('Request params do not match method parameters');
     }
 }

@@ -14,8 +14,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
     route := r.URL.Path
     log.Printf("Route resolved: %s\n", time.Since(start)) // Log time for route resolution
 
-    // Construct the command to execute the PHP script
-    cmd := exec.Command("php", "/app/public/index.php", route)
+    query := r.URL.Query()
+
+    // to-do: get request body
+    //body := r.Body
+
+    cmd := exec.Command("php", "/app/public/index.php", route, query.Encode())
 
     start = time.Now() // Reset timer
     // Execute the PHP script and capture its output.
