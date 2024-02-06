@@ -18,6 +18,11 @@ spl_autoload_register(function ($className) {
 
 $request = Request::loadRequest($argv);
 
+// Ignore /favicon.ico, for now
+if ($request->route === '/favicon.ico') {
+    die();
+}
+
 $router = new Router($request);
 $router->callRouteByUrl();
 
