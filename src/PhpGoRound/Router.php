@@ -112,7 +112,7 @@ class Router
     }
 
     /**
-     * @param array array<string, string>
+     * @param array<string, string> $methodParams
      */
     private function checkRequestParamsMatchMethodParams(array $methodParams): void
     {     
